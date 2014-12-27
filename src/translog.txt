@@ -1,0 +1,25 @@
+Memory Transaction Log
+Memory Size: 200
+Input file: input.txt
+Memory Address begins at location 0
+
+----------------------------------------------------------------------------------------------------------------
+           Best Fit                                Worst Fit                               Close Fit
+----------------------------------------------------------------------------------------------------------------
+   ID  DF? Success  Addr.  Size           ID  DF? Success  Addr.  Size           ID  DF? Success  Addr.  Size
+
+A   1      SUCCESS     0     20        A   1      SUCCESS     0     20        A   1      SUCCESS     0     20        
+A   2      SUCCESS    20     30        A   2      SUCCESS    20     30        A   2      SUCCESS    20     30        
+A   3      SUCCESS    50     30        A   3      SUCCESS    50     30        A   3      SUCCESS    50     30        
+A   4      SUCCESS    80     50        A   4      SUCCESS    80     50        A   4      SUCCESS    80     50        
+A   5      SUCCESS   130     20        A   5      SUCCESS   130     20        A   5      SUCCESS   130     20        
+A   6      SUCCESS   150     20        A   6      SUCCESS   150     20        A   6      SUCCESS   150     20        
+A   7      SUCCESS   170     30        A   7      SUCCESS   170     30        A   7      SUCCESS   170     30        
+A   8  DF  FAILED     -1     50        A   8  DF  FAILED     -1     50        A   8  DF  FAILED     -1     50        
+D   3      SUCCESS    50     30        D   3      SUCCESS    50     30        D   3      SUCCESS    50     30        
+D   6      SUCCESS   150     20        D   6      SUCCESS   150     20        D   6      SUCCESS   150     20        
+A   9  DF  SUCCESS   150     50        A   9  DF  FAILED     -1     50        A   9  DF  FAILED     -1     50        
+D   2      SUCCESS    20     30        D   2      SUCCESS    20     30        D   2      SUCCESS    20     30        
+A  10      SUCCESS   150     50        A  10  DF  SUCCESS    20     50        A  10  DF  SUCCESS    20     50        
+D   4      SUCCESS    80     50        D   4      SUCCESS    80     50        D   4      SUCCESS    80     50        
+A  11      SUCCESS    50      8        A  11      SUCCESS    80      8        A  11      SUCCESS   150      8        

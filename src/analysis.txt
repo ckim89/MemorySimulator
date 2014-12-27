@@ -1,0 +1,15 @@
+Performance Analysis Chart
+Memory Size 200
+Input File Used: input.txt
+----------------------------------------------------------------------------
+Statistics:                        Best Fit    Worst Fit    Close Fit
+----------------------------------------------------------------------------
+
+Number of Defragmentations:               2            3            3
+# of failed allocation requests:          3            5            5
+Average size failed allocs:            50.0         50.0         50.0
+Average time to process alloc*:        0.00         0.00         0.00
+Average time/size quicksort*:          0.13         0.00         0.00
+Average time/size bucketsort*:         0.00         0.00         0.00
+
+*All times in microseconds.

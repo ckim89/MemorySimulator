@@ -1,0 +1,76 @@
+600.226 Data Structures -- Summer 2014
+Project 4 - Memory Management
+You must work in small groups of 3 for this assignment, and are strongly recommended to utilize the paired programming technique and a code versioning system as much as possible for development.
+
+Description:
+
+In this assignment you will be writing a program to simulate memory management, and also comparing several different approaches to satisfying requests and defragmenting memory. The basic idea is that memory is kept as a set of free blocks, each with a starting address and size. As requests for memory arrive, allocations are satisfied by using all or a portion of a free block, with the leftover being returned to the set of available memory. When memory is deallocated (no longer needed), the block it used gets returned to the free set. Eventually there are many adjacent small blocks on the free list that could be combined to form larger blocks - this is called defragmenting.
+
+We will assume that each free block of memory has a starting address and a size, in bytes. Initially your program will be given one piece of information: the total number of bytes in memory. We assume at the start that it is one large contiguous free block with starting address 0. Then your program will need to process a list of memory allocation and deallocation requests. The format for these requests will be very simple. "A 12" is a request to allocate a block of 12 bytes. (Note that all bytes satisfying a request must be contiguous in memory.) When an allocation is requested it is given a unique ID number (regardless of whether it is ultimately satisfied or fails). ID numbers must start at 1, not 0. In order to deallocate some memory space, we use the allocation ID number: "D 15" will free the block associated with allocation request 15 (if it exists in the allocated section). The memory that was used then gets returned to the set of available blocks. All the input (memory size and alloc/dealloc requests) will come from a plain text input file, one request (allocate or deallocate) per line.
+
+It is likely that after some time, an allocation request will be denied because there isn't a free block large enough to satisfy it. At that point, your program will partially defragment the available memory by joining all adjacent free blocks into the largest blocks possible. This is not a full defrag, so do not move allocated blocks in memory! After the partial defrag, make one more attempt to satisfy the request. If it still can't fit into an available block, then that request fails.
+
+Implementation Details:
+
+Now, there are several different schemes for allocating memory. And, as you all might expect by now, there are several different data structures that can be used to implement them. Part of the goal of this assignment is to do a performance analysis of three different allocation schemes, each of which is implemented with a different data structure. Of these schemes, the first two are used in practice. The third one is fabricated for the purpose of this assignment. Remember that for each of these schemes any unused portions of the block chosen are returned to the free space store (available memory).
+
+Best-fit: use the smallest block that's big enough, implemented with a balanced binary search tree that is O(log n) worst case for all operations.
+Worst-fit: use the largest possible block (to avoid small fragments), implemented with a heap-based (maximum) priority queue.
+Close-fit: quickly choose a smallish block that's big enough, but not optimized to be best or worst. In other words, without alot of fuss, choose a block roughly a decent size. Use a hash table for this strategy, keeping the load factor below .75 (high because memory is at a premium). This may require rehashing. (In other words, hash the available blocks into buckets based on size ranges, and use the bucket for the requested size as a starting point to find a block large enough.)
+In order to defragment memory efficiently, you will need to sort the free blocks by memory address. You must implement and compare two different sorting strategies: the quicksort and the bucketsort.
+
+Performance Analysis: There are several different measures that you will need in order to compare the approaches. Each of these measures must be independently applied to each of the three allocation strategies. Note that an allocation request is only considered to have failed if it can't be satisfied after (partial) defragmenting.
+
+Count and report the number of defragmentations.
+Count and report the number of failed allocation requests. A request only fails once, even if you make several attempts to satisfy it (before and after defragmenting).
+Calculate and report the average size of failed allocation requests.
+Calculate and report the average time to process an allocation request. If a request causes a defrag, do not count the defrag time. Instead, measure this as two separate allocation requests, each of which must be included in the average time.
+For each of the sorting strategies:
+Measure the time it takes to do the entire sort (not including recombining memory blocks), and the number of elements being sorted (size). (These values do not have to be individually reported.)
+Calculate and report the average time/size for each sort operation.
+You should report these performance measurements in a table which has a column for each memory allocation strategy (3 total). It will have six rows: one for each of the memory alloc measures (4 total), and one for the averaged ratios of time/size of each sort (2 sort strategies total).
+
+In order to time various operations, you can use System.currentTimeMillis() as we did in the last assignment. It is possible that a block runs so quickly (for small data sets) that the difference between the start and end times will be 0. If you find this is the case (test it!), then you might need to pad the block with extra statements in order to slow down execution somewhat. Print statements are usually good for something like this, however, you will need to make sure that the same exact padding is given to the other blocks you are comparing. If you use padding, please include that information with your performance analysis output.
+
+Program Output: Your program must create two different output files. One file, called "analysis.txt" will contain your performance analysis chart and any related information, as described above. Make sure this is nicely formatted and labelled so it is easy to read and draw conclusions from. The second file, called "translog.txt" will be a log of the transaction requests and results of each, one transaction per line, in the order in which they occurred. It must have columns corresponding to each of the three memory allocation strategies. In this log file, identify each allocation request by the code "A", the size of the request and the assigned ID (this should be the same for all allocation strategies, and remember to start counting with 1, not 0). The results (for each alloc strategy) will be either the starting memory address of where it was allocated or a failed indicator, and also a "DF" if the request caused a defragmentation. There should also be a line for each deallocation request indicated by a "D" and the ID, and the result for each strategy indicating whether it was successful or invalid. All the transactions should appear in the same order that they occur in the input file.
+
+Coding Requirements: You must do an object oriented solution. Use multiple classes, generics, etc. to organize the processing. You must use JUnit testing for at least 3 different program features or classes. With proper citation, you may (and should) re-use code from prior assignments, and from the text. You may use some Java API Collection classes such as String, ArrayList, and LinkedList. You may not use the Java API classes as a substitute for implementing your own balanced binary search tree, heap (priority queue), hash table, or sorting methods.
+
+Hints: First of all, your program will need three different memory spaces, one for each allocation scheme. You might find it helpful to create an interface for all the common memory features, and then implement it for each allocation scheme. Also, because there are two different sorting algorithms to use for defragmenting, you will need to create a copy of your memory blocks before sorting, and then delete the second copy afterwards. Note that only one sorted copy (the one you keep) needs to actually have the blocks combined for the defragmentation part. That shouldn't be done twice.
+
+Submission & Grading
+
+Part A -- Testing & Design -- Due 11p on Monday, 7/21 -- 30 points
+
+For this part of the assignment, you are required to submit two documents as precursors to the actual coding phase: a large test suite, and a design and development plan. Both of these documents should be a combination of text and diagrams to communicate your intents, as detailed below. Save each and upload to Blackboard as pdf files only. A solution to the design plan will be distributed, so no late assignments!
+
+Create a very large input file, using a big memory size, that is guaranteed to choose different blocks for each of the three allocation schemes. You will want it to force many defrags so that you can compare the efficiencies of your sorting strategies with a significant data size. Decide on a memory size, and then include an exact list of requests as they would be fed to the program, and some diagrams and sentences to explain how they (or some subset of them) would give different results for each memory scheme. [15 pts]
+Create an object oriented design and a development plan for how your group will incrementally code the solution to this assignment. Use UML diagrams to illustrate the relationships between the java files you will develop. Also include a sentence or two explaining the purpose of each file. Lastly, provide a development plan (timeline) for when each component will be completed and which group member(s) will be responsible for it. At least 2 group members must be responsible for each part of your solution! [15 pts]
+Only one student per group should submit both of these files. Make sure that both documents include the full names and Blackboard logins for all group members. You will all receive the same grade! Remember to submit pdf files only.
+
+We strongly recommend creating a working balanced binary search tree by Monday also. You can either edit the binary search tree code posted on the course website (either the recursive or inner node class version), or finish the Weiss implementation (writing the delete method).
+
+Part B -- Java Code -- Due 11p on Friday, 7/25 -- 100 points
+
+This is the coding and testing phase of your assignment. All students in a group will receive the same grade! You should test each other's code as ruthlessly as possible. You will also be evaluating yourselves and each other at the end of the project.
+
+Each program feature listed here will be graded in an all or nothing manner - either it works perfectly as specified, or you get no credit for it. Use incremental coding development and be ruthless in your testing! Make sure you test your partners' code.
+Here's the grading breakdown by features:
+[10] main program structure & flow (includes input)
+[8] best fit allocation (BBST)
+[7] worst fit allocation (priority queue)
+[10] close fit allocation (hash table)
+[10] quicksort
+[10] bucketsort
+[5] defragment (after sorting)
+[10] performance analysis
+[5] transaction log
+[10] checkstyle
+[15] junit testing
+Remember that if your classes don't all compile together, you get a 0.
+We will be doing in-person grading for this assignment, which means you will have to fully demo your program to one of us in order to receive a grade. (More details will be provided later.)
+Only one student in the group should submit all the files for that group's solution on Blackboard. Each java file in your submission bundle should contain the names of whichever students worked on them. Remember to submit all the code on Blackboard!
+Remember to tar/zip together all the files required to compile and run your solution, *.java and *.txt. Don't forget to include your JUnit test files. You can also submit any necessary readme files.
+Part C -- Team Members Evaluation -- due 11p Saturday, 7/26 -- 10 points
+
+There is a team evaluation that every student must individiually complete and submit on Blackboard. It will contain information about group meetings, so you should be updating it as the project unfolds. It also will give you some hints regarding important factors when working in a group, so read through it before you start. If your data appears unrealistic, then you will not receive full credit for this.
